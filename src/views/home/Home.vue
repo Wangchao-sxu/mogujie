@@ -11,8 +11,7 @@
       <HomeSwiper :banners='banners'></HomeSwiper><!--父传子，动态属性，传递一个banners数组-->
       <RecommendView :recommends='recommends'></RecommendView>
       <Feature></Feature>
-      <TabControl class="tab-control" 
-                  :titles="['流行','新款','精选']"
+      <TabControl :titles="['流行','新款','精选']"
                   @tabClick="tabClick"></TabControl>
       <GoodsList :goods="showGoods"></GoodsList>
     </Scroll>
@@ -58,13 +57,24 @@ export default {
         'sell':{page:0,list:[]},
       },
       currentType:'pop',
-      isShowBackTop:true
+      isShowBackTop:false,
+      saveY:0
     }
   },
   computed:{
     showGoods(){
       return this.goods[this.currentType].list
-    }
+    },
+  },
+  destroyed() {
+    console.log('ssssss');
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0,this.saveY,50);
+    this.$refs.scroll.refresh();
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.getScrollY()
   },
   //创建时就请求数据
   created(){
@@ -75,8 +85,28 @@ export default {
     this.getHomeGoods('new');
     this.getHomeGoods('sell');
   },
+  mounted(){
+    //1、监听item中的图片加载完成（图片加载完成的事件监听）
+    const refresh = this.debounce(this.$refs.scroll.refresh)
+    this.$bus.$on('itemImageLoad',()=>{
+      refresh();
+    })
+  },
   methods:{
+
     /*事件监听相关的方法 */
+    //这是一个防抖函数
+    debounce(func,delay){
+      let timer = null;
+
+      return function(...args){
+        if(timer){clearTimeout(timer)}
+
+        timer = setTimeout(()=>{
+          func.apply(this,args)
+        },delay)
+      }
+    },
     tabClick(index){
       switch(index){
         case 0:
@@ -93,16 +123,18 @@ export default {
     backClick(){
       this.$refs.scroll.scroll.scrollTo(0,0);
     },
+    //监听滚轮位置的方法
     contentScroll(position){
       // console.log(position)
       this.isShowBackTop = (-position.y) > 1000
     },
+    //上拉加载更多的方法
     loadMore(){
       // console.log('上拉加载更多')
       setTimeout(()=>{
         this.getHomeGoods(this.currentType)
-        this.$refs.scroll.scroll.refresh()//加载完成后刷新一次，重新计算高度
-      },2000)
+        this.$refs.scroll.refresh()//加载完成后刷新一次，重新计算高度
+      },1000)
     },
 
     /**网络请求的方法 */
@@ -119,7 +151,7 @@ export default {
       getHomeGoods(type,page).then(res =>{
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
-
+        //完成上拉加载更多
         this.$refs.scroll.finishPullUp()
       })
     }
@@ -131,7 +163,7 @@ export default {
   #home{
     /* padding-top: 44px; */
     height: 100vh;
-    /* position: relative; */
+    position: relative;
   }
   .home-nav{
     background-color:pink;
@@ -142,20 +174,15 @@ export default {
     top: 0;
     z-index: 9;
   }
-  .tab-control{
-    position: sticky;/*粘滞定位 */
-    top: 44px;
-    background-color: #fff;
-    z-index: 9;
-  }
+  
   .content{
-    margin-top: 44px;
-    height: calc(100% - 93px);
-    /* position: absolute;
+    /* margin-top: 44px;
+    height: calc(100% - 93px); */
+    position: absolute;
     top: 44px;
     bottom: 49px;
     left: 0;
-    right: 0; */
-    /* overflow: hidden; */
+    right: 0; 
+    /* overflow: hidden;*/
   }
 </style>
