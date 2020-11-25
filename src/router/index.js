@@ -4,7 +4,7 @@ Vue.use(VueRouter)
 
 
 export default new VueRouter({
-  mode:'history',
+  mode:'history',//模式为history模式。HTML5新增
   routes:[
     {
       path:'',

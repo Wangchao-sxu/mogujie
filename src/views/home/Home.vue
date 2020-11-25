@@ -66,15 +66,20 @@ export default {
       return this.goods[this.currentType].list
     },
   },
+  //生命周期的最后一步，销毁
   destroyed() {
     console.log('ssssss');
   },
+  //离开后再返回来的时候
   activated() {
     this.$refs.scroll.scrollTo(0,this.saveY,50);
     this.$refs.scroll.refresh();
   },
+  //离开的时候
   deactivated() {
+    //1、保存Y值
     this.saveY = this.$refs.scroll.getScrollY()
+    //2、取消全局事件的监听（这个方法不好，还是用路由吧）
   },
   //创建时就请求数据
   created(){

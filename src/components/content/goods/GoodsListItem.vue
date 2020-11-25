@@ -1,6 +1,6 @@
 <template>
   <div class="goods" @click="itemClick">
-    <img :src="goodsItem.show.img" alt="" @load="imageLoad">
+    <img :src="showImage" alt="" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">￥{{goodsItem.price}}</span>
@@ -18,6 +18,12 @@ export default {
       default(){
         return {}
       }
+    }
+  },
+  //通过计算属性判断渲染主页还是详情页的列表
+  computed:{
+    showImage(){
+      return this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods:{
