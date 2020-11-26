@@ -1,16 +1,23 @@
 <template>
   <div id='detail'>
-    <DetailNavBar class="detail-nav"></DetailNavBar>
-    <Scroll class="content" ref="scroll">
+    <DetailNavBar class="detail-nav"
+                  @titleClick="titleClick"
+                  ref="nav"></DetailNavBar>
+    <Scroll class="content" 
+            ref="scroll" 
+            :probeType='3'
+            @scroll="contentScroll">
       <DetailSwiper :topImage="topImage"></DetailSwiper>
       <DetailBaseInfo :goods="goods"></DetailBaseInfo>
       <DetailShopInfo :shop="shop"></DetailShopInfo>
       <DetailGoodsInfo :detailInfo="detailInfo" 
                         @imageLoad="imageLoad"></DetailGoodsInfo>
-      <DetailParamInfo :paramInfo="paramInfo"></DetailParamInfo>
-      <DetailCommentInfo :commentInfo="commentInfo"></DetailCommentInfo>
-      <GoodsList :goods="recommends"></GoodsList>
+      <DetailParamInfo ref="param" :paramInfo="paramInfo"></DetailParamInfo>
+      <DetailCommentInfo ref="comment" :commentInfo="commentInfo"></DetailCommentInfo>
+      <GoodsList ref="recommend" :goods="recommends"></GoodsList>
     </Scroll>
+    <DetailBottomBar @addToCart="addToCart"></DetailBottomBar>
+    <BackTop @click.native="backClick" v-show="isShowBackTop"></BackTop>
   </div>
 </template>
 
@@ -22,6 +29,8 @@ import DetailShopInfo from './childComps/DetailShopInfo'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo'
 import DetailParamInfo from './childComps/DetailParamInfo'
 import DetailCommentInfo from './childComps/DetailCommentInfo'
+import DetailBottomBar from './childComps/DetailBottomBar'
+import BackTop from '../../components/content/backTop/BackTop'
 
 import Scroll from '../../components/common/scroll/Scroll'
 import GoodsList from '../../components/content/goods/GoodsList'
@@ -38,7 +47,9 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
-    GoodsList
+    GoodsList,
+    DetailBottomBar,
+    BackTop
   },
   data(){
     return {
@@ -49,7 +60,10 @@ export default {
       detailInfo:{},
       paramInfo:{},
       commentInfo:{},
-      recommends:[]
+      recommends:[],
+      themeTopYs:[],
+      currentIndex:0,
+      isShowBackTop:false, 
     }
   },
   created(){
@@ -75,7 +89,6 @@ export default {
         this.commentInfo = data.rate.list[0]
       }
     })
-  
     //3、请求推荐的数据
     getRecommend().then(res=>{
       console.log(res);
@@ -83,6 +96,9 @@ export default {
     })
   },
   methods:{
+    backClick(){
+      this.$refs.scroll.scrollTo(0,0);
+    },
     imageLoad(){
       this.$refs.scroll.refresh();
     },
@@ -97,12 +113,56 @@ export default {
         },delay)
       }
     },
+    titleClick(index){
+      console.log(index);
+      this.$refs.scroll.scrollTo(0,-this.themeTopYs[index],100)
+    },
+    contentScroll(position){
+      // console.log(position);
+      this.isShowBackTop = (-position.y) > 1000
+      //1、获取Y值
+      const positionY = -position.y;
+      //2、positonY和主题中的y值进行对比
+      /*
+        [0，7938，9120，9452，Number.MAX_VALUE]
+        positionY在0和7938之间，index=0
+        positionY在7938和9120之间，index=1
+        positionY在9120和9452之间，index=2
+        positionY在9452和一个非常大的值之间，index=3
+      */ 
+      let length = this.themeTopYs.length;
+      for(let i=0;i<length-1;i++){
+        if(this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i+1])){
+          this.currentIndex = i;
+          this.$refs.nav.currentIndex = this.currentIndex;
+        }
+      }
+    },
+    addToCart(){
+      //1、获取购物车需要展示的信息
+      const product = {}
+      product.image = this.topImage[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+
+      //2、将商品加入到购物车（从当前页面提交数据到vuex中的store的state）
+      this.$store.dispatch('addCart',product)
+    }
   },
   mounted(){
     const refresh = this.debounce(this.$refs.scroll.refresh)
     this.$bus.$on('itemImageLoad',()=>{
       console.log('------------')
       refresh();
+      this.themeTopYs = [];
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.param.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      this.themeTopYs.push(Number.MAX_VALUE);
+      // console.log(this.themeTopYs);
     })
   }
 }
@@ -116,7 +176,9 @@ export default {
     height: 100vh;
   }
   .content{
-    height: calc(100% - 44px);
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
   }
   .detail-nav{
     position: relative;

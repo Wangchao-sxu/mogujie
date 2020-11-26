@@ -126,7 +126,7 @@ export default {
       }
     },
     backClick(){
-      this.$refs.scroll.scroll.scrollTo(0,0);
+      this.$refs.scroll.scrollTo(0,0);
     },
     //监听滚轮位置的方法
     contentScroll(position){
