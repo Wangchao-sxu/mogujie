@@ -149,19 +149,23 @@ export default {
 
       //2、将商品加入到购物车（从当前页面提交数据到vuex中的store的state）
       this.$store.dispatch('addCart',product)
+    },
+    getOffsetTop(){
+      this.themeTopYs = []
+      this.themeTopYs.push(0)
+      this.themeTopYs.push(this.$refs.param.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+      this.themeTopYs.push(Number.MAX_VALUE)
     }
+  },
+  updated(){
+    this.getOffsetTop();
   },
   mounted(){
     const refresh = this.debounce(this.$refs.scroll.refresh)
     this.$bus.$on('itemImageLoad',()=>{
-      console.log('------------')
-      refresh();
-      this.themeTopYs = [];
-      this.themeTopYs.push(0);
-      this.themeTopYs.push(this.$refs.param.$el.offsetTop);
-      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-      this.themeTopYs.push(Number.MAX_VALUE);
+      refresh()
       // console.log(this.themeTopYs);
     })
   }
