@@ -9,13 +9,16 @@
       <CartList></CartList>
     </Scroll>
     
+
     <!--底部结算-->
+    <BottomBar></BottomBar>
   </div>
 </template>
 
 <script>
 import NavBar from '../../components/common/navbar/NavBar' 
 import CartList from './childComps/CartList'
+import BottomBar from './childComps/CartBottomBar'
 
 import Scroll from '../../components/common/scroll/Scroll'
 
@@ -25,7 +28,8 @@ export default {
   components:{
     NavBar,
     CartList,
-    Scroll
+    Scroll,
+    BottomBar
   },
   computed:{
     //mapGetters辅助函数仅仅是将store中的getters映射到局部计算属性
@@ -54,7 +58,7 @@ export default {
     bottom:49px;
     left: 0;
     right: 0; */
-    height: calc(100% - 44px - 49px);
+    height: calc(100% - 44px - 49px - 40px);
     overflow: hidden;
   }
 </style>

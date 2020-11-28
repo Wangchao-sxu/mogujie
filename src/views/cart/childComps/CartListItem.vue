@@ -1,9 +1,9 @@
 <template>
   
    <div id="shop-item">
-    <!-- <div class="item-selector">
-      
-    </div> -->
+    <div class="item-selector">
+      <CheckButton :isChecked='itemInfo.checked' @click.native="CheckClick"></CheckButton>      
+    </div>
     <div class="item-img">
       <img :src="itemInfo.image" alt="商品图片">
     </div>
@@ -19,11 +19,11 @@
 </template>
 
 <script>
-// import CheckButton from './CheckButton'
+import CheckButton from '../../../components/content/checkButton/CheckButton'
 export default {
   name:'CartListItem',
   components:{
-    // CheckButton
+    CheckButton
   },
   props:{
     itemInfo:{
@@ -34,8 +34,10 @@ export default {
     }
   },
   methods: {
-    checkedChange: function () {
+    CheckClick() {
+      //每次点击进行取反，与上一次相反
       this.itemInfo.checked = !this.itemInfo.checked;
+      console.log(this.itemInfo.checked)
     }
   }
 }
@@ -88,8 +90,17 @@ export default {
     bottom: 10px;
     left: 10px;
     right: 10px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
   }
   .info-bottom .item-price {
     color: orangered;
+  }
+  .info-bottom .left{
+    flex:1 ;
+  }
+  .info-bottom .right{
+    flex: 1;
   }
 </style>
