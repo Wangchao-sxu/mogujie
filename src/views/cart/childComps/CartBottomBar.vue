@@ -57,7 +57,11 @@ export default {
   },
   methods:{
     checkClick(){
-      
+      if(this.isSelectAll){//全部选中
+        return this.$store.state.cartList.forEach(item => item.checked = false);
+      }else{
+        return this.$store.state.cartList.forEach(item => item.checked = true);
+      }
     }
   }
 }

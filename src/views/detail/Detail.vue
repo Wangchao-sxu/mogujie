@@ -18,6 +18,9 @@
     </Scroll>
     <DetailBottomBar @addToCart="addToCart"></DetailBottomBar>
     <BackTop @click.native="backClick" v-show="isShowBackTop"></BackTop>
+
+    <Toast class="toast" :message="message" :show="show"></Toast>
+  
   </div>
 </template>
 
@@ -36,6 +39,10 @@ import Scroll from '../../components/common/scroll/Scroll'
 import GoodsList from '../../components/content/goods/GoodsList'
 
 import {getDetail,Goods,Shop,GoodsParam,getRecommend} from '../../network/detail'
+import { mapActions } from 'vuex'
+
+import Toast from '../../components/common/toast/Toast'
+
 export default {
   name:'Detail',
   components:{
@@ -49,7 +56,8 @@ export default {
     DetailCommentInfo,
     GoodsList,
     DetailBottomBar,
-    BackTop
+    BackTop,
+    Toast
   },
   data(){
     return {
@@ -64,6 +72,8 @@ export default {
       themeTopYs:[],
       currentIndex:0,
       isShowBackTop:false, 
+      message:'',
+      show:false
     }
   },
   created(){
@@ -96,6 +106,7 @@ export default {
     })
   },
   methods:{
+    ...mapActions(['addCart']),//映射关系，辅助我们使用actions
     backClick(){
       this.$refs.scroll.scrollTo(0,0);
     },
@@ -148,7 +159,21 @@ export default {
       product.iid = this.iid;
 
       //2、将商品加入到购物车（从当前页面提交数据到vuex中的store的state）
-      this.$store.dispatch('addCart',product)
+      //Vuex的actions可以返回一个promise
+      this.addCart(product).then(res =>{
+        console.log(res);
+        
+        this.message = res;
+        this.show = true;
+
+        setTimeout(()=>{
+          this.message = '';
+          this.show = false;
+        },1500)
+      })
+      // this.$store.dispatch('addCart',product).then(res=>{
+      //   console.log(res);
+      // })
     },
     getOffsetTop(){
       this.themeTopYs = []
@@ -188,5 +213,14 @@ export default {
     position: relative;
     z-index: 9;
     background-color: #fff;
+  }
+  .toast{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: rgba(0,0,0,.7);
+    color: #fff;
+    padding: 8px 10px;
   }
 </style>

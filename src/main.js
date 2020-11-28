@@ -10,6 +10,10 @@ import store from './store/index'
 //引入iconfont字体图标
 import './assets/icon/iconfont.css'
 
+// import toast from './components/common/toast/index'
+// //安装toast插件
+// Vue.use(toast)
+
 //创建事件总线的实例
 Vue.prototype.$bus = new Vue();
 
