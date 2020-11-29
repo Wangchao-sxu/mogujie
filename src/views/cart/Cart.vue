@@ -11,7 +11,7 @@
     
 
     <!--底部结算-->
-    <BottomBar></BottomBar>
+    <BottomBar @calc="calc"></BottomBar>
   </div>
 </template>
 
@@ -39,6 +39,11 @@ export default {
   },
   activated(){
     this.$refs.scroll.refresh();
+  },
+  methods:{
+    calc(){
+      console.log('--------------');
+    }
   }
 }
 </script>

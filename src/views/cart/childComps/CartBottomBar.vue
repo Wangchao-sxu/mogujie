@@ -13,7 +13,7 @@
       合计：{{totalPrice}}
     </div>
 
-    <div class="calculate">
+    <div class="calculate" @click="calc">
       去计算({{checkedLength}})
     </div>
   </div>
@@ -62,6 +62,9 @@ export default {
       }else{
         return this.$store.state.cartList.forEach(item => item.checked = true);
       }
+    },
+    calc(){
+      return this.$emit('calc')
     }
   }
 }

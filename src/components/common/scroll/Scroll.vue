@@ -63,6 +63,7 @@ export default {
       return this.scroll ? this.scroll.y : 0;
     }
   },
+  //监听的数据变化时都会执行回调进行后续操作
   watch:{
     data(){
       setTimeout(this.refresh,20);

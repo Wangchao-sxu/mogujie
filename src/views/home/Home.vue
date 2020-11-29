@@ -68,7 +68,7 @@ export default {
   },
   //生命周期的最后一步，销毁
   destroyed() {
-    console.log('ssssss');
+    // console.log('ssssss');
   },
   //离开后再返回来的时候
   activated() {
