@@ -29,6 +29,10 @@ export default new VueRouter({
     {
       path:'/detail/:iid',
       component:()=>import('../views/detail/Detail.vue')
+    },
+    {
+      path:'/login',
+      component:()=>import('../views/login/Login.vue')
     }
   ]
 })

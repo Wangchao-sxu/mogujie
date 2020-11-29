@@ -1,6 +1,6 @@
 <template>
   <div id="user-info">
-    <a class="user" href="">
+    <div class="user" href="">
       <div class="left">
         <img src="../../../assets/img/common/photo.png" alt="">
       </div>
@@ -13,7 +13,7 @@
       <div class="back">
         <img src="../../../assets/img/common/next.png" alt="">
       </div>
-    </a>   
+    </div>   
   </div>
 </template>
 

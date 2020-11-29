@@ -5,7 +5,7 @@
       <div slot="center">我的</div>
     </NavBar>
     <!--个人信息，登录/注册-->
-    <UserInfo></UserInfo>
+    <UserInfo @click.native="userClick"></UserInfo>
 
     <!--个人积分栏-->
     <div class="myMoney">
@@ -57,6 +57,12 @@ export default {
         {content:'我的购物车'},
         {content:'下载购物APP'}
       ]
+    }
+  },
+  methods:{
+    userClick(){
+      console.log('----------');
+      this.$router.push('/login');
     }
   }
 }
