@@ -15,6 +15,12 @@ import VueLazyLoad from 'vue-lazyload'
 //使用懒加载插件
 Vue.use(VueLazyLoad)
 
+//引入element-ui
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+//使用element-ui
+Vue.use(ElementUI)
+
 //创建事件总线的实例
 Vue.prototype.$bus = new Vue();
 
