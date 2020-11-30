@@ -21,6 +21,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 //使用element-ui
 Vue.use(ElementUI)
 
+//导入vant
+import Vant from 'vant'
+// import 'vant/lib/vant-css/index.css';
+Vue.use(Vant)
+
 //创建事件总线的实例
 Vue.prototype.$bus = new Vue();
 

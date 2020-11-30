@@ -36,7 +36,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button
+          <el-button
           class="register-btn"
           type="primary"
           @click="submit('formData')"
@@ -49,7 +49,8 @@
 </template>
 
 <script>
-import {register} from '../../../network/login'
+// import {register} from '../../../network/login'
+import axios from 'axios'
 export default {  
   name:"RegisterList",
   data() {
@@ -97,26 +98,38 @@ export default {
       },
     };
   },
-  created(){
-    this.register();
-    console.log(this.register());
-  },
   methods:{
     submit(formName) {
       console.log(this.formData);
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          register.post("/register", this.formData).then((data) => {
-            console.log(data);
-            if (data.data.code == 0) {
+          axios({
+            url: 'http://localhost:3000/register',
+            method: 'post',
+            data: {
+              ...this.formData
+            }
+          }).then(result=>{
+            console.log(result.data)
+            if (result.data.code == 0) {
               // alert(data.data.message);
               this.$toast.fail("账号已存在");
             } else {
               this.$toast.success("注册成功");
               this.$router.push("/login");
             }
-          });
+          })
+          // register("/register", this.formData).then((data) => {
+          //   console.log(data);
+          //   if (data.data.code == 0) {
+          //     // alert(data.data.message);
+          //     this.$toast.fail("账号已存在");
+          //   } else {
+          //     this.$toast.success("注册成功");
+          //     this.$router.push("/login");
+          //   }
+          // });
         } else {
           this.$toast.fail("注册出错");
           return false;
