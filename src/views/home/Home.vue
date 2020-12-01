@@ -1,6 +1,9 @@
 <template>
   <div id="home">  
-    <NavBar class="home-nav"><div slot="center">购物街</div></NavBar>
+    <NavBar class="home-nav">
+      <!--具名插槽这种写法在vue 3.0中已经废弃，vue 3.0中会在<NavBar>中使用 v-slot:center-->
+      <div slot="center">购物街</div>
+    </NavBar>
     
     <Scroll class="content" 
             ref="scroll" 
