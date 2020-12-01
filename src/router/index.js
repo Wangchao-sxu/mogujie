@@ -8,7 +8,7 @@ export default new VueRouter({
   routes:[
     {
       path:'',
-      redirect:'/home'
+      redirect:'/home'//重定向
     },
     {
       path:'/cart',
