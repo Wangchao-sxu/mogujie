@@ -56,6 +56,7 @@ export default {
     }
   },
   methods:{
+    //全选按钮的点击
     checkClick(){
       if(this.isSelectAll){//全部选中
         return this.$store.state.cartList.forEach(item => item.checked = false);
@@ -63,6 +64,7 @@ export default {
         return this.$store.state.cartList.forEach(item => item.checked = true);
       }
     },
+    //计算
     calc(){
       return this.$emit('calc')
     }
